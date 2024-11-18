@@ -1,1 +1,1 @@
-# directory_yc
+# mynextjs15app
