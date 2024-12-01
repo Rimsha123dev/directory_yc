@@ -21,7 +21,7 @@ export const experimental_ppr = true;
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
 
-  const [post, { select: editorPosts }] = await Promise.all([
+  const [post, editorPlaylist] = await Promise.all([
     client.fetch(STARTUP_BY_ID_QUERY, { id }),
     client.fetch(PLAYLIST_BY_SLUG_QUERY, {
       slug: "editor-picks-new",
@@ -31,6 +31,9 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   if (!post) return notFound();
 
   const parsedContent = md.render(post?.pitch || "");
+
+  // Ensure the editorPosts is fetched correctly before using it
+  const editorPosts = editorPlaylist?.select || [];  // Safely access select, fallback to an empty array
 
   return (
     <>
@@ -54,8 +57,9 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
               href={`/user/${post.author?._id}`}
               className="flex gap-2 items-center mb-3"
             >
+              {/* Check if author and image exist */}
               <Image
-                src={post.author.image}
+                src={post.author?.image || "/default-avatar.png"} // Fallback to a default image if image is missing
                 alt="avatar"
                 width={64}
                 height={64}
@@ -63,9 +67,9 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
               />
 
               <div>
-                <p className="text-20-medium">{post.author.name}</p>
+                <p className="text-20-medium">{post.author?.name}</p>
                 <p className="text-16-medium !text-black-300">
-                  @{post.author.username}
+                  @{post.author?.username}
                 </p>
               </div>
             </Link>
