@@ -150,7 +150,7 @@ const StartupForm = () => {
           height={300}
           style={{ borderRadius: 20, overflow: "hidden" }}
           textareaProps={{
-            placeholder: "Briefly describe your idea and what problem it solves",
+            placeholder: "Briefly describe your idea and how problem it solves",
           }}
           previewOptions={{
             disallowedElements: ["style"],
